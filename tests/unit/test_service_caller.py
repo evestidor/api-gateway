@@ -1,5 +1,3 @@
-import pytest
-
 from src.services import ServiceCaller
 from src.registry import AbstractServiceRegistry
 
@@ -14,38 +12,24 @@ class FakeRegistry(AbstractServiceRegistry):
         return self.services[name]
 
 
-@pytest.fixture
-def create_request(rf):
-    def _inner(service_name, path):
-        request = rf.get(path)
-        request.kwargs = {'service': service_name}
-        return request
-    return _inner
-
-
 class TestGetFullURL:
 
-    def _get_full_url(self, request):
+    def _get_full_url(self, request, service_name):
         caller = ServiceCaller.from_django_request(
             request,
+            service_name,
             registry=FakeRegistry(),
         )
         return caller._get_full_url()
 
-    def test_when_service_has_ending_slash_returns_url(
-        self,
-        create_request,
-    ):
-        request = create_request('service1', '/service1/path/')
-        result = self._get_full_url(request)
+    def test_when_service_has_ending_slash_returns_url(self, rf):
+        request = rf.get('/service1/path/')
+        result = self._get_full_url(request, 'service1')
         expected = 'http://service1/path/'
         assert expected == result
 
-    def test_when_service_does_not_have_ending_slash_returns_url(
-        self,
-        create_request,
-    ):
-        request = create_request('service2', '/service2/path/')
-        result = self._get_full_url(request)
+    def test_when_service_does_not_have_ending_slash_returns_url(self, rf):
+        request = rf.get('/service2/path/')
+        result = self._get_full_url(request, 'service2')
         expected = 'http://service2/path/'
         assert expected == result

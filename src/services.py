@@ -50,13 +50,13 @@ class Request:
         self.data = data or {}
 
     @classmethod
-    def from_django_request(cls, request: HttpRequest):
+    def from_django_request(cls, request: HttpRequest, service_name: str):
         data = {}
         data.update(request.GET)
         data.update(request.POST)
         return cls(
             path=request.path,
-            service_name=request.kwargs['service'],
+            service_name=service_name,
             data=data,
         )
 
@@ -83,10 +83,11 @@ class ServiceCaller:
     def from_django_request(
         cls,
         request: HttpRequest,
+        service_name: str,
         request_handler: RequestHandler = None,
         registry: ServiceRegistry = None,
     ):
-        request = Request.from_django_request(request)
+        request = Request.from_django_request(request, service_name)
         return cls(request, request_handler, registry)
 
     def get(self):

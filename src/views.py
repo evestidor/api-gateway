@@ -5,17 +5,24 @@ from .services import ServiceCaller
 
 class GatewayView(APIView):
 
-    def get(self, request, *args, **kwargs):
-        return ServiceCaller.from_django_request(request).get()
+    def get(self, *args, **kwargs):
+        return self._service.get()
 
-    def post(self, request, *args, **kwargs):
-        return ServiceCaller.from_django_request(request).post()
+    def post(self, *args, **kwargs):
+        return self._service.post()
 
-    def put(self, request, *args, **kwargs):
-        return ServiceCaller.from_django_request(request).put()
+    def put(self, *args, **kwargs):
+        return self._service.put()
 
-    def patch(self, request, *args, **kwargs):
-        return ServiceCaller.from_django_request(request).patch()
+    def patch(self, *args, **kwargs):
+        return self._service.patch()
 
-    def delete(self, request, *args, **kwargs):
-        return ServiceCaller.from_django_request(request).delete()
+    def delete(self, *args, **kwargs):
+        return self._service.delete()
+
+    @property
+    def _service(self):
+        return ServiceCaller.from_django_request(
+            self.request,
+            self.kwargs['service'],
+        )
