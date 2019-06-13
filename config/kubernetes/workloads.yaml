@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: evestidor/api-gateway:master-b4a35dadabcd9ca637ff64c0ff3a95ecc1ae2906
+          image: evestidor/api-gateway:master-77cc40a508b8039a2d1fcf1b56f2330112c2c092

@@ -9,4 +9,4 @@ LATEST_COMMIT=$(git rev-parse HEAD)
 CLEANED_BRANCH_NAME=${BRANCH_NAME//\//-}  # Slashes can't go through
 IMAGE_NAME=$ORGANIZATION_NAME/$PROJECT_NAME
 
-IMAGE_NAME=$IMAGE_NAME:$BRANCH_NAME docker-compose $@
+IMAGE_NAME=$IMAGE_NAME:$BRANCH_NAME docker-compose -f config/compose.yaml $@

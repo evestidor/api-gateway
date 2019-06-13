@@ -4,7 +4,7 @@ services:
     image: $IMAGE_NAME
     restart: unless-stopped
     container_name: api
-    build: .
+    build: ..
     ports:
       - 8000:8000
     volumes:
