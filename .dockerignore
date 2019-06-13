@@ -4,3 +4,4 @@
 !Pipfile
 !Pipfile.lock
 !pytest.ini
+!manage.py
