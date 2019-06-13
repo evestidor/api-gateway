@@ -6,7 +6,7 @@ SECRET_KEY = 't@=o2!@z0(anh%!vhj)gof(q=_=s^)gafcz3@s9%o68)034qrm'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
