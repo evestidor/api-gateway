@@ -8,6 +8,7 @@ ipython = "*"
 django = "*"
 djangorestframework = "*"
 requests = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pytest = "*"

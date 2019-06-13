@@ -1,10 +1,21 @@
 from abc import ABC, abstractmethod
 from os.path import join
+from json.decoder import JSONDecodeError
 
 import requests
-from django.http.request import HttpRequest
+from rest_framework.request import Request as RFRequest
 
 from .registry import ServiceRegistry
+
+
+class ServiceError(Exception):
+    def __init__(
+        self,
+        data: dict,
+        status: int,
+    ):
+        self.data = data
+        self.status = status
 
 
 class Response(ABC):
@@ -43,22 +54,13 @@ class Request:
         self,
         path: str,
         service_name: str,
+        query_params: dict = None,
         data: dict = None,
     ):
         self.path = self._remove_service_from_path(path, service_name)
         self.service_name = service_name
+        self.query_params = query_params or {}
         self.data = data or {}
-
-    @classmethod
-    def from_django_request(cls, request: HttpRequest, service_name: str):
-        data = {}
-        data.update(request.GET)
-        data.update(request.POST)
-        return cls(
-            path=request.path,
-            service_name=service_name,
-            data=data,
-        )
 
     @staticmethod
     def _remove_service_from_path(path: str, service_name: str) -> str:
@@ -82,48 +84,67 @@ class ServiceCaller:
     @classmethod
     def from_django_request(
         cls,
-        request: HttpRequest,
+        request: RFRequest,
         service_name: str,
         request_handler: RequestHandler = None,
         registry: ServiceRegistry = None,
     ):
-        request = Request.from_django_request(request, service_name)
+        request = Request(
+            path=request.path,
+            service_name=service_name,
+            query_params=request.query_params,
+            data=request.data,
+        )
         return cls(request, request_handler, registry)
 
     def get(self):
         response = self._request_handler.get(
             self._get_full_url(),
-            params=self._request.data,
+            params=self._request.query_params,
         )
-        return response.json()
+        return self._parse_response(response)
 
     def post(self):
         response = self._request_handler.post(
             self._get_full_url(),
             data=self._request.data,
+            params=self._request.query_params,
         )
-        return response.json()
+        return self._parse_response(response)
 
     def patch(self):
         response = self._request_handler.patch(
             self._get_full_url(),
             data=self._request.data,
+            params=self._request.query_params,
         )
-        return response.json()
+        return self._parse_response(response)
 
     def put(self):
         response = self._request_handler.put(
             self._get_full_url(),
             data=self._request.data,
+            params=self._request.query_params,
         )
-        return response.json()
+        return self._parse_response(response)
 
     def delete(self):
         url = self._get_full_url()
         response = self._request_handler.delete(url)
-        return response.json()
+        return self._parse_response(response)
 
     def _get_full_url(self) -> str:
         service_name = self._request.service_name
         service_host = self._registry.resolve_host(service_name)
         return join(service_host, self._request.path)
+
+    def _parse_response(self, response):
+        try:
+            result = response.json()
+        except JSONDecodeError:
+            raise ServiceError({}, status=500)
+
+        if response.ok:
+            return result
+        else:
+            raise ServiceError(result, response.status_code)
