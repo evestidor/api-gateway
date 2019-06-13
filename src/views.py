@@ -6,16 +6,16 @@ from .services import ServiceCaller
 class GatewayView(APIView):
 
     def get(self, request, *args, **kwargs):
-        return ServiceCaller.from_request(request).get()
+        return ServiceCaller.from_django_request(request).get()
 
     def post(self, request, *args, **kwargs):
-        return ServiceCaller.from_request(request).post()
+        return ServiceCaller.from_django_request(request).post()
 
     def put(self, request, *args, **kwargs):
-        return ServiceCaller.from_request(request).put()
+        return ServiceCaller.from_django_request(request).put()
 
     def patch(self, request, *args, **kwargs):
-        return ServiceCaller.from_request(request).patch()
+        return ServiceCaller.from_django_request(request).patch()
 
     def delete(self, request, *args, **kwargs):
-        return ServiceCaller.from_request(request).delete()
+        return ServiceCaller.from_django_request(request).delete()
