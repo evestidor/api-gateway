@@ -7,12 +7,14 @@ name = "pypi"
 ipython = "*"
 django = "*"
 djangorestframework = "*"
+requests = "*"
 
 [dev-packages]
 pytest = "*"
 pytest-spec = "*"
 pytest-cov = "*"
 "flake8" = "*"
+pytest-django = "*"
 
 [requires]
 python_version = "3.6"
