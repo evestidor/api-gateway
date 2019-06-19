@@ -9,7 +9,7 @@ class AbstractServiceRegistry(ABC):
 
 
 class ServiceRegistry(AbstractServiceRegistry):
-    services = {'stock-manager': 'http://evestidor-svc-stock-manager:8000'}
+    services = {'stock-manager': 'http://evestidor-stock-manager:8000'}
 
     def resolve_host(self, name: str) -> str:
         return self.services[name]
