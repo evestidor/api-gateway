@@ -9,6 +9,8 @@ django = "*"
 djangorestframework = "*"
 requests = "*"
 django-cors-headers = "*"
+django-environ = "*"
+sentry-sdk = "==0.9.5"
 
 [dev-packages]
 pytest = "*"

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from django.conf import settings
 
 
 class AbstractServiceRegistry(ABC):
@@ -9,7 +10,7 @@ class AbstractServiceRegistry(ABC):
 
 
 class ServiceRegistry(AbstractServiceRegistry):
-    services = {'stock-manager': 'http://evestidor-stock-manager:8000'}
+    services = {'stock-manager': settings.STOCK_MANAGER_URL}
 
     def resolve_host(self, name: str) -> str:
         return self.services[name]

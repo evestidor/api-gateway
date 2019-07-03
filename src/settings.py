@@ -1,36 +1,82 @@
 import os
+import environ
+import sentry_sdk
+from sentry_sdk.integrations import django
+
+
+env = environ.Env(
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+)
+
+ENVIRONMENT = env('ENVIRONMENT', default='localhost')
+
+# PATHS ----------------------------------------------------------------------
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 't@=o2!@z0(anh%!vhj)gof(q=_=s^)gafcz3@s9%o68)034qrm'
+ROOT_DIR_NAME = 'src'
 
-DEBUG = True
+PROJECT_DIR = os.path.join(BASE_DIR, ROOT_DIR_NAME)
 
-ALLOWED_HOSTS = ['*']
 
-INSTALLED_APPS = [
+# DJANGO SECURITY ------------------------------------------------------------
+
+SECRET_KEY = env('SECRET_KEY')
+
+DEBUG = env('DEBUG', default=False)
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000',
+    'http://evestidor-ui:8000',
+]
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+# DJANGO APPLICATION ---------------------------------------------------------
+
+ROOT_URLCONF = '{}.urls'.format(ROOT_DIR_NAME)
+
+WSGI_APPLICATION = '{}.wsgi.application'.format(ROOT_DIR_NAME)
+
+APPEND_SLASH = True
+
+
+# DJANGO APPS ----------------------------------------------------------------
+
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS
 
-ROOT_URLCONF = 'src.urls'
+
+# DATABASE -------------------------------------------------------------------
+
+DATABASES = {
+    # reads os.environ['DATABASE_URL']
+    'default': env.db(default='sqlite:///local.db'),
+}
+
+
+# TEMPLATES ------------------------------------------------------------------
 
 TEMPLATES = [
     {
@@ -48,22 +94,25 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'src.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
-    }
-}
+# STATIC ---------------------------------------------------------------------
 
-VALIDATOR_PREFIX = 'django.contrib.auth.password_validation'
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': '{}.UserAttributeSimilarityValidator'.format(VALIDATOR_PREFIX)},
-    {'NAME': '{}.MinimumLengthValidator'.format(VALIDATOR_PREFIX)},
-    {'NAME': '{}.CommonPasswordValidator'.format(VALIDATOR_PREFIX)},
-    {'NAME': '{}.NumericPasswordValidator'.format(VALIDATOR_PREFIX)},
+STATIC_URL = '/static/'
+
+
+# MIDDLEWARES ----------------------------------------------------------------
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# I18N & L10N -----------------------------------------------------------------
 
 LANGUAGE_CODE = 'en-us'
 
@@ -75,15 +124,22 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://0.0.0.0:8000',
-    'http://evestidor-ui:8000',
-]
+# ERROR REPORTING -------------------------------------------------------------
 
-CORS_ORIGIN_ALLOW_ALL = False
+SENTRY_DSN = env('SENTRY_DSN', default=None)
 
-CORS_ALLOW_CREDENTIALS = True
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[django.DjangoIntegration()],
+        environment=ENVIRONMENT,
+    )
+
+
+# API GATEWAY ----------------------------------------------------------------
+
+STOCK_MANAGER_URL = env(
+    'STOCK_MANAGER_URL',
+    default='http://evestidor-stock-manager:80',
+)
