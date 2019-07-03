@@ -33,7 +33,7 @@ jobs:
       - run: *build-image
       - run:
           name: Unit tests
-          command: ./config/run-image pytest
+          command: SECRET_KEY=secret ./config/run-image pytest
 
   test-lint:
     <<: *defaults
