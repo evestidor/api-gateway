@@ -133,6 +133,4 @@ if SENTRY_DSN:
 
 # API GATEWAY ----------------------------------------------------------------
 
-STOCK_MANAGER_URL = env(
-    'STOCK_MANAGER_URL', default='http://evestidor-stock-manager:80'
-)
+STOCK_MANAGER_URL = env('STOCK_MANAGER_URL', default=None)
