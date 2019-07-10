@@ -41,8 +41,8 @@ jobs:
       - checkout
       - run: *build-image
       - run:
-          name: Lint tests (flake8)
-          command: ./config/run-image flake8
+          name: Lint tests (black)
+          command: ./config/run-image black --check -q src
 
   publish:
     <<: *defaults

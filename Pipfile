@@ -16,9 +16,7 @@ sentry-sdk = "==0.9.5"
 pytest = "*"
 pytest-spec = "*"
 pytest-cov = "*"
-"flake8" = "*"
 pytest-django = "*"
-isort = {extras = ["pipfile"],version = "*"}
 black = "==19.3b0"
 
 [requires]
