@@ -3,7 +3,6 @@ from django.conf import settings
 
 
 class AbstractServiceRegistry(ABC):
-
     @abstractmethod
     def resolve_host(self, name: str) -> str:
         pass

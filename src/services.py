@@ -9,24 +9,18 @@ from .registry import ServiceRegistry
 
 
 class ServiceError(Exception):
-    def __init__(
-        self,
-        data: dict,
-        status: int,
-    ):
+    def __init__(self, data: dict, status: int):
         self.data = data
         self.status = status
 
 
 class Response(ABC):
-
     @abstractmethod
     def json(self) -> dict:
         pass
 
 
 class RequestHandler(ABC):
-
     @abstractmethod
     def get(self, url: str, params: dict = None) -> Response:
         pass
@@ -49,13 +43,8 @@ class RequestHandler(ABC):
 
 
 class Request:
-
     def __init__(
-        self,
-        path: str,
-        service_name: str,
-        query_params: dict = None,
-        data: dict = None,
+        self, path: str, service_name: str, query_params: dict = None, data: dict = None
     ):
         self.path = self._remove_service_from_path(path, service_name)
         self.service_name = service_name
@@ -71,7 +60,6 @@ class Request:
 
 
 class ServiceCaller:
-
     def __init__(
         self,
         request: Request,
@@ -100,8 +88,7 @@ class ServiceCaller:
 
     def get(self):
         response = self._request_handler.get(
-            self._get_full_url(),
-            params=self._request.query_params,
+            self._get_full_url(), params=self._request.query_params
         )
         return self._parse_response(response)
 

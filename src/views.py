@@ -1,14 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .services import (
-    ServiceCaller,
-    ServiceError,
-)
+from .services import ServiceCaller, ServiceError
 
 
 class GatewayView(APIView):
-
     def get(self, *args, **kwargs):
         return self._request('get')
 
@@ -34,7 +30,4 @@ class GatewayView(APIView):
 
     @property
     def _service(self):
-        return ServiceCaller.from_django_request(
-            self.request,
-            self.kwargs['service'],
-        )
+        return ServiceCaller.from_django_request(self.request, self.kwargs['service'])

@@ -25,19 +25,11 @@ SECRET_KEY = env('SECRET_KEY', default='SECRET')
 
 DEBUG = env('DEBUG', default=False)
 
-DEFAULT_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '0.0.0.0',
-]
+DEFAULT_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=DEFAULT_HOSTS)
 
-DEFAULT_CORS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://0.0.0.0:8000',
-]
+DEFAULT_CORS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://0.0.0.0:8000']
 
 CORS_ORIGIN_WHITELIST = env.list('CORS_WHITELIST', default=DEFAULT_CORS)
 
@@ -65,10 +57,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = [
-    'rest_framework',
-    'corsheaders',
-]
+THIRD_PARTY_APPS = ['rest_framework', 'corsheaders']
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS
 
@@ -77,7 +66,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS
 
 DATABASES = {
     # reads os.environ['DATABASE_URL']
-    'default': env.db(default='sqlite:///local.db'),
+    'default': env.db(default='sqlite:///local.db')
 }
 
 
@@ -94,9 +83,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+            ]
         },
-    },
+    }
 ]
 
 
@@ -145,6 +134,5 @@ if SENTRY_DSN:
 # API GATEWAY ----------------------------------------------------------------
 
 STOCK_MANAGER_URL = env(
-    'STOCK_MANAGER_URL',
-    default='http://evestidor-stock-manager:80',
+    'STOCK_MANAGER_URL', default='http://evestidor-stock-manager:80'
 )
