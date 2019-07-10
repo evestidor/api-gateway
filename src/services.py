@@ -64,10 +64,9 @@ class Request:
 
     @staticmethod
     def _remove_service_from_path(path: str, service_name: str) -> str:
+        path = path.replace('api/', '')
         path = path.replace(service_name, '')
         path = path.replace('//', '')
-        if not path.endswith('/'):
-            path += '/'
         return path
 
 

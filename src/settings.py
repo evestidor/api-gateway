@@ -4,12 +4,11 @@ import sentry_sdk
 from sentry_sdk.integrations import django
 
 
-env = environ.Env(
-    DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, []),
-)
+env = environ.Env()
 
 ENVIRONMENT = env('ENVIRONMENT', default='localhost')
+
+URL_PREFIX = env('URL_PREFIX', default='api')
 
 # PATHS ----------------------------------------------------------------------
 
@@ -22,18 +21,25 @@ PROJECT_DIR = os.path.join(BASE_DIR, ROOT_DIR_NAME)
 
 # DJANGO SECURITY ------------------------------------------------------------
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY', default='SECRET')
 
 DEBUG = env('DEBUG', default=False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+DEFAULT_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+]
 
-CORS_ORIGIN_WHITELIST = [
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=DEFAULT_HOSTS)
+
+DEFAULT_CORS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://0.0.0.0:8000',
-    'http://evestidor-ui:8000',
 ]
+
+CORS_ORIGIN_WHITELIST = env.list('CORS_WHITELIST', default=DEFAULT_CORS)
 
 CORS_ORIGIN_ALLOW_ALL = False
 
@@ -52,7 +58,6 @@ APPEND_SLASH = True
 # DJANGO APPS ----------------------------------------------------------------
 
 DJANGO_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

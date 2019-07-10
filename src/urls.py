@@ -4,5 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    re_path(r'^(?P<service>[\w\-]+)/.*', views.GatewayView.as_view()),
+    re_path(r'^api/(?P<service>[\w\-]+)/.*', views.GatewayView.as_view()),
 ]
