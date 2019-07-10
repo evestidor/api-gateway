@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from os.path import join
 from json.decoder import JSONDecodeError
+from os.path import join
 
 import requests
 from rest_framework.request import Request as RFRequest

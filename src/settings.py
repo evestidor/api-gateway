@@ -1,8 +1,8 @@
 import os
+
 import environ
 import sentry_sdk
 from sentry_sdk.integrations import django
-
 
 env = environ.Env()
 
