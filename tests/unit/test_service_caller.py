@@ -5,22 +5,16 @@ from src.registry import AbstractServiceRegistry
 
 
 class FakeRegistry(AbstractServiceRegistry):
-    services = {
-        'service1': 'http://service1/',
-        'service2': 'http://service2',
-    }
+    services = {'service1': 'http://service1/', 'service2': 'http://service2'}
 
     def resolve_host(self, name: str) -> str:
         return self.services[name]
 
 
 class TestGetFullURL:
-
     def _get_full_url(self, request, service_name):
         caller = ServiceCaller.from_django_request(
-            request,
-            service_name,
-            registry=FakeRegistry(),
+            request, service_name, registry=FakeRegistry()
         )
         return caller._get_full_url()
 
