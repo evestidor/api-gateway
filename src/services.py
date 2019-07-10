@@ -3,6 +3,7 @@ from json.decoder import JSONDecodeError
 from os.path import join
 
 import requests
+from django.conf import settings
 from rest_framework.request import Request as RFRequest
 
 from .registry import ServiceRegistry
@@ -53,7 +54,7 @@ class Request:
 
     @staticmethod
     def _remove_service_from_path(path: str, service_name: str) -> str:
-        path = path.replace('api/', '')
+        path = path.replace(f'{settings.URL_PREFIX}/', '')
         path = path.replace(service_name, '')
         path = path.replace('//', '')
         return path
