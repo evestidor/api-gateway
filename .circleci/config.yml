@@ -42,7 +42,7 @@ jobs:
       - run: *build-image
       - run:
           name: Lint tests (black)
-          command: ./config/run-image black --check -q src
+          command: ./config/run-image flake8 --max-line-length=88
 
   publish:
     <<: *defaults
