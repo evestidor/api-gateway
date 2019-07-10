@@ -2,8 +2,8 @@
 set -e
 
 # VARS ---------------------------------------------------------------------------
-ORGANIZATION_NAME=$(head -n 1 .circleci/vars/organization_name)
-PROJECT_NAME=$(head -n 1 .circleci/vars/project_name)
+ORGANIZATION_NAME=$(head -n 1 conf/vars/organization_name)
+PROJECT_NAME=$(head -n 1 conf/vars/project_name)
 
 # IMAGE INFO ----------------------------------------------------------------------
 IMAGE_NAME=$ORGANIZATION_NAME/$PROJECT_NAME
