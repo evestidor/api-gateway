@@ -11,7 +11,7 @@ aliases:
 
   - &build-image
     name: Build image
-    command: ./config/build-image
+    command: .circleci/bin/build
 
 workflows:
   version: 2
@@ -33,7 +33,7 @@ jobs:
       - run: *build-image
       - run:
           name: Unit tests
-          command: ./config/run-image pytest
+          command: .circleci/bin/run pytest
 
   test-lint:
     <<: *defaults
@@ -42,7 +42,7 @@ jobs:
       - run: *build-image
       - run:
           name: Lint tests (black)
-          command: ./config/run-image flake8 --max-line-length=88
+          command: .circleci/bin/run flake8 --max-line-length=88
 
   publish:
     <<: *defaults
@@ -52,4 +52,4 @@ jobs:
       - run: *authenticate-dockerhub
       - run:
           name: Push image
-          command: ./config/push-image
+          command: .circleci/bin/push
